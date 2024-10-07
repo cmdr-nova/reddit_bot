@@ -1,4 +1,4 @@
-Welcome to my personal hell, wherein you will import image posts from reddit rss feeds, and then slap them onto Mastodon. You don't like that? Too bad, you live with me now. 
+Welcome to my personal hell, wherein you will import image posts from subreddits, and then slap them onto Mastodon. You don't like that? Too bad, you live with me now. 
 
 Before we begin, you'll need to create your bot account on Mastodon, then go into the developer panel under preferences, and create an app, then save the credentials. Then, you'll want to create an app for Reddit's API, and save those credentials (link: https://www.reddit.com/r/reddit.com/wiki/api/).
 
