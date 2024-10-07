@@ -17,7 +17,7 @@ CLIENT_ID = 'YTrHTWWY6jqA5F4ajcuaX_dGOhlr9i9ffq9bdNCesA'
 CLIENT_SECRET = 'EC3BtshuiZkQrmQSAjilZWnkVOxzGSExteOhnfk0wNk'
 ACCESS_TOKEN = 'm3zDDfUwmx5hPDE0FyH4uoPmVEruPF5J6TRD3JnoL0Y'
 
-# reddit API credentials
+# Reddit API credentials
 REDDIT_CLIENT_ID = 'lEWwk_7-Zfx2H3TOrFomZg'
 REDDIT_CLIENT_SECRET = 'lGpi7zLHxYfG37hlS45fzsPrdSZGQw'
 REDDIT_USER_AGENT = 'rss-bot'
@@ -37,6 +37,15 @@ SUBREDDITS = [
     'AnimeGirls',
     '90sNostalgia',
     '2Booty',
+    'animeART',
+    'animetitties',
+    'animefeets',
+    'cosplaybabes',
+    'cosplaylewd',
+    'cosplaynsfw',
+    'transgonewild',
+    'gonewild',
+    'liminalspace',
 ]
 
 def get_random_subreddit():
@@ -86,13 +95,24 @@ def post_photo(mastodon_client, photo_url, post_url):
         # post the image
         media = mastodon_client.media_post(media_file=tmp_file_path)
         mastodon_client.status_post(
-            status='Straight from the mkultra grab-bag! #reddit #anime #backrooms #cosplay Original post: ' + post_url,
+            status='Straight from the mkultra grab-bag! #reddit #90s #anime #backrooms #cosplay #gonewild Original post: ' + post_url,
             media_ids=media,
             sensitive=True  # mark the post as sensitive, because that's the cool thing to do
         )
     finally:
         # delete the temporary file so that your hdd doesn't explode with anime girls and backrooms photos
         os.remove(tmp_file_path)
+
+# follow users back function
+
+def follow_back(mastodon_client):
+    followers = mastodon_client.account_followers(mastodon_client.me().id)
+    follower_ids = [follower.id for follower in followers]
+    relationships = mastodon_client.account_relationships(follower_ids)
+    for follower, relationship in zip(followers, relationships):
+        if not relationship.following:
+            mastodon_client.account_follow(follower.id)
+            print(f"Followed back: {follower.username}")
 
 def main():
     mastodon_client = mastodon.Mastodon(
@@ -107,6 +127,9 @@ def main():
         client_secret=REDDIT_CLIENT_SECRET,
         user_agent=REDDIT_USER_AGENT
     )
+
+    # follow back new followers
+    follow_back(mastodon_client)
 
     subreddit_name = get_random_subreddit()
     photo_url, post_url = get_random_photo_from_subreddit(reddit, subreddit_name)
