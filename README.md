@@ -25,10 +25,10 @@ or if for some reason you're using stinky windows,
 myenv\Scripts\activate
 ```
 
-and then
+and then (bot has been updated to not use rss and instead just use the subreddits themselves, which essentially makes this not an rss bot, but i digress!)
 
 ```
-pip install requests feedparser mastodon.py beautifulsoup4
+pip install requests feedparser mastodon.py beautifulsoup4 praw
 ```
 
 Once you've done that, set us up the cronjob. Run it every 30 minutes, or whatever time you want.
