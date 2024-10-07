@@ -24,28 +24,9 @@ REDDIT_USER_AGENT = 'your_client_name'
 
 # list your subreddits here, so that bot knows what to pick from
 SUBREDDITS = [
-    'Animewallpaper',
-    'ZeroTwo',
-    'BlueArchive',
-    'ZenlessZoneZero',
-    'Edgerunners',
-    'BaldursGate3',
-    'BokuNoHeroAcademia',
-    'ChainsawMan',
-    'cosplaygirls',
-    'backrooms',
-    'AnimeGirls',
-    '90sNostalgia',
-    '2Booty',
-    'animeART',
-    'animetitties',
-    'animefeets',
-    'cosplaybabes',
-    'cosplaylewd',
-    'cosplaynsfw',
-    'transgonewild',
-    'gonewild',
-    'liminalspace',
+    'science',
+    'programming',
+    'python',
 ]
 
 def get_random_subreddit():
