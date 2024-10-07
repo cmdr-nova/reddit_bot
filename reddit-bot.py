@@ -1,4 +1,4 @@
-# welcome to my personal hell, wherein you will import image posts from reddit rss feeds, and then slap them onto reddit. install requests, feedparser, mastodon.py, and beautifulsoup4 to make it all work. will require you make a virtual pyton env in order to for it run. when you've done all that, slap it into a cronjob and make sure you tell it to use that environment!
+# welcome to my personal hell, wherein you will import image posts from reddit rss feeds, and then slap them onto mastodon. install requests, feedparser, mastodon.py, and beautifulsoup4 to make it all work. will require you make a virtual pyton env in order to for it run. when you've done all that, slap it into a cronjob and make sure you tell it to use that environment!
 
 import os
 import requests
