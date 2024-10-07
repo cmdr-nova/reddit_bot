@@ -54,7 +54,7 @@ def get_random_photo_from_subreddit(reddit, subreddit_name):
     image_submissions = [submission for submission in submissions if get_high_res_image_url(submission)]
 
     if not image_submissions:
-        print("No image posts found in subreddit. Retrying...")
+        print("No image posts found in subreddit. Retrying...") # if it can't ever find any image posts, this will keep going. be sure to include subs WITH images
         return get_random_photo_from_subreddit(reddit, subreddit_name)  # retry
     else:
         random_submission = random.choice(image_submissions)
