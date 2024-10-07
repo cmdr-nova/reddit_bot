@@ -12,15 +12,15 @@ import praw
 image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
 
 # mastodon credentials
-INSTANCE_URL = 'https://mkultra.monster'
-CLIENT_ID = 'YTrHTWWY6jqA5F4ajcuaX_dGOhlr9i9ffq9bdNCesA'
-CLIENT_SECRET = 'EC3BtshuiZkQrmQSAjilZWnkVOxzGSExteOhnfk0wNk'
-ACCESS_TOKEN = 'm3zDDfUwmx5hPDE0FyH4uoPmVEruPF5J6TRD3JnoL0Y'
+INSTANCE_URL = 'your_instance_url'
+CLIENT_ID = 'your_client_id'
+CLIENT_SECRET = 'your_client_secret'
+ACCESS_TOKEN = 'your_access_token'
 
 # Reddit API credentials
-REDDIT_CLIENT_ID = 'lEWwk_7-Zfx2H3TOrFomZg'
-REDDIT_CLIENT_SECRET = 'lGpi7zLHxYfG37hlS45fzsPrdSZGQw'
-REDDIT_USER_AGENT = 'rss-bot'
+REDDIT_CLIENT_ID = 'your_client_id'
+REDDIT_CLIENT_SECRET = 'your_client_secret'
+REDDIT_USER_AGENT = 'your_client_name'
 
 # list your subreddits here, so that bot knows what to pick from
 SUBREDDITS = [
@@ -95,7 +95,7 @@ def post_photo(mastodon_client, photo_url, post_url):
         # post the image
         media = mastodon_client.media_post(media_file=tmp_file_path)
         mastodon_client.status_post(
-            status='Straight from the mkultra grab-bag! #reddit #90s #anime #backrooms #cosplay #gonewild Original post: ' + post_url,
+            status='Put your own status text here! Original post: ' + post_url,
             media_ids=media,
             sensitive=True  # mark the post as sensitive, because that's the cool thing to do
         )
