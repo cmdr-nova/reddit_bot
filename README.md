@@ -2,7 +2,7 @@ Welcome to my personal hell, wherein you will import image posts from reddit rss
 
 First, you must acquire a server, unless you're going to run this on your own PC 24/7. That's up to you!
 
-Install requests, feedparser, mastodon.py, and beautifulsoup4 to make it all work (use pip within an environment).
+Now do this
 
 ```
 sudo apt-get update
