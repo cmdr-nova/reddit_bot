@@ -13,6 +13,7 @@ sudo apt-get install python3 python3-venv python3-pip
 cd /path/to/your/python-script-folder
 python3 -m venv myenv
 ```
+Hit the big red button,
 
 ```
 source myenv/bin/activate
