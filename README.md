@@ -50,5 +50,3 @@ Once you've done that, set us up the cronjob. Run it every 30 minutes, or whatev
 ```
 
 And there ya go.
-
-(I'm still working out how to make the image quality not tiny and pixelated)
