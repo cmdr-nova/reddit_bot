@@ -6,6 +6,14 @@ You're good to go.
 
 First, you must acquire a server, unless you're going to run this on your own PC 24/7. That's up to you!
 
+Take the script source code, and then make a folder, and go
+
+```
+nano reddit-bot.py
+```
+
+Copy the source code into that blank file, write out, then exit, and return to your root folder.
+
 Now do this
 
 ```
