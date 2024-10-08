@@ -2,6 +2,8 @@ Welcome to my personal hell, wherein you will import image posts from subreddits
 
 Before we begin, you'll need to create your bot account on Mastodon, then go into the developer panel under preferences, and create an app, then save the credentials. Then, you'll want to create an app for Reddit's API, and save those credentials (link: https://www.reddit.com/r/reddit.com/wiki/api/).
 
+See the bot in action on my instance, [here](https://mkultra.monster/@net_run)!
+
 You're good to go.
 
 First, you must acquire a server, unless you're going to run this on your own PC 24/7. That's up to you!
