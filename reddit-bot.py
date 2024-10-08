@@ -117,10 +117,18 @@ def resize_image(image, max_size):
     return image.resize((new_width, new_height), Image.ANTIALIAS)
 
 def follow_back_and_unfollow(mastodon_client):
+    # fetch followers and following lists
     followers = mastodon_client.account_followers(mastodon_client.me()['id'])
-    followers_ids = {follower['id'] for follower in followers}
-    
     following = mastodon_client.account_following(mastodon_client.me()['id'])
+
+    # print debug information
+    print(f"Followers: {[follower['acct'] for follower in followers]}")
+    print(f"Following: {[account['acct'] for account in following]}")
+
+    # create a set of follower IDs for quick lookup
+    followers_ids = {follower['id'] for follower in followers}
+
+    # unfollow users who are not following back
     for account in following:
         if account['id'] not in followers_ids:
             mastodon_client.account_unfollow(account['id'])
@@ -130,7 +138,7 @@ def follow_back_and_unfollow(mastodon_client):
             print(f"Followed back: {account['acct']}")
 
 if __name__ == "__main__":
-    # initialize Mastodon
+    # initialize Mastodon client
     mastodon_client = Mastodon(
         access_token=ACCESS_TOKEN,
         api_base_url=INSTANCE_URL
@@ -139,15 +147,19 @@ if __name__ == "__main__":
     # follow back new followers and unfollow those who unfollowed
     follow_back_and_unfollow(mastodon_client)
 
-    # initialize Reddit
+    # initialize Reddit client
     reddit = praw.Reddit(
         client_id=REDDIT_CLIENT_ID,
         client_secret=REDDIT_CLIENT_SECRET,
         user_agent=REDDIT_USER_AGENT
     )
 
+    # get a random subreddit and post a photo
     subreddit_name = get_random_subreddit()
     photo_url, post_url, submission = get_random_photo_from_subreddit(reddit, subreddit_name)
     post_photo(mastodon_client, photo_url, post_url, submission)
+
+    # end of script
+    print("Script execution completed.")
 
     # that's the end of the story, thanks for coming by!
