@@ -2,7 +2,7 @@ Welcome to my personal hell, wherein you will import image posts from subreddits
 
 Bot functions:
 - bot will post from a list of subreddits supplied by you within the script
-- bot will post one image at random within a given interval, configured by you in a crontab
+- bot will post one image at random within a given interval, configured by you in a cronjob
 - bot will follow users back each time it runs, if it detects new followers
 - bot will unfollow users that it detects have stopped following it, each time it runs
 - bot will share custom text, configured by you from within the script, which includes image blurring and a CW
