@@ -116,12 +116,22 @@ def resize_image(image, max_size):
     new_height = int(new_width / aspect_ratio)
     return image.resize((new_width, new_height), Image.ANTIALIAS)
 
+def follow_back(mastodon_client):
+    followers = mastodon_client.account_followers(mastodon_client.me()['id'])
+    for follower in followers:
+        if not follower.get('following', False):
+            mastodon_client.account_follow(follower['id'])
+            print(f"Followed back: {follower['acct']}")
+
 if __name__ == "__main__":
     # initialize Mastodon
     mastodon_client = Mastodon(
         access_token=ACCESS_TOKEN,
         api_base_url=INSTANCE_URL
     )
+
+    # follow back new followers
+    follow_back(mastodon_client)
 
     # initialize Reddit
     reddit = praw.Reddit(
