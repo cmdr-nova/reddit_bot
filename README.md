@@ -51,4 +51,6 @@ Once you've done that, set us up the cronjob. Run it every 30 minutes, or whatev
 
 And there ya go.
 
+I personally have mine set to every 10 minutes, because 30 minutes was just too long. But, maybe 10 is too much for some, who knows!
+
 See the bot in action on my instance, [here](https://mkultra.monster/@net_run)!
