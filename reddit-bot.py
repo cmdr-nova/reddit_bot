@@ -116,12 +116,18 @@ def resize_image(image, max_size):
     new_height = int(new_width / aspect_ratio)
     return image.resize((new_width, new_height), Image.ANTIALIAS)
 
-def follow_back(mastodon_client):
+def follow_back_and_unfollow(mastodon_client):
     followers = mastodon_client.account_followers(mastodon_client.me()['id'])
-    for follower in followers:
-        if not follower.get('following', False):
-            mastodon_client.account_follow(follower['id'])
-            print(f"Followed back: {follower['acct']}")
+    followers_ids = {follower['id'] for follower in followers}
+    
+    following = mastodon_client.account_following(mastodon_client.me()['id'])
+    for account in following:
+        if account['id'] not in followers_ids:
+            mastodon_client.account_unfollow(account['id'])
+            print(f"Unfollowed: {account['acct']}")
+        elif not account.get('following', False):
+            mastodon_client.account_follow(account['id'])
+            print(f"Followed back: {account['acct']}")
 
 if __name__ == "__main__":
     # initialize Mastodon
@@ -130,8 +136,8 @@ if __name__ == "__main__":
         api_base_url=INSTANCE_URL
     )
 
-    # follow back new followers
-    follow_back(mastodon_client)
+    # follow back new followers and unfollow those who unfollowed
+    follow_back_and_unfollow(mastodon_client)
 
     # initialize Reddit
     reddit = praw.Reddit(
