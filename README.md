@@ -6,6 +6,8 @@ Bot functions:
 - bot will follow users back each time it runs, if it detects new followers
 - bot will unfollow users that it detects have stopped following it, each time it runs
 - bot will share custom text, configured by you from within the script, which includes image blurring and a CW
+- if the bot detects that an image is too large for the mastodon api, it will attempt to resize the image, and then post it
+- bot will wait for finalization of an upload before finishing
 
 Before we begin, you'll need to create your bot account on Mastodon, then go into the developer panel under preferences, and create an app, then save the credentials. Then, you'll want to create an app for Reddit's API, and save those credentials (link: https://www.reddit.com/r/reddit.com/wiki/api/).
 
