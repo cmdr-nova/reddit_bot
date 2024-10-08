@@ -1,5 +1,12 @@
 Welcome to my personal hell, wherein you will import image posts from subreddits, and then slap them onto Mastodon. You don't like that? Too bad, you live with me now. 
 
+Bot functions:
+- bot will post from a list of subreddits supplied by you within the script
+- bot will post one image at random within a given interval, configured by you in a crontab
+- bot will follow users back each time it runs, if it detects new followers
+- bot will unfollow users that it detects have stopped following it, each time it runs
+- bot will share custom text, configured by you from within the script, which includes image blurring and a CW
+
 Before we begin, you'll need to create your bot account on Mastodon, then go into the developer panel under preferences, and create an app, then save the credentials. Then, you'll want to create an app for Reddit's API, and save those credentials (link: https://www.reddit.com/r/reddit.com/wiki/api/).
 
 You're good to go.
