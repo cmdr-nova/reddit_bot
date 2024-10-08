@@ -1,4 +1,4 @@
-# welcome to my personal hell, wherein you will import image posts from reddit rss feeds, and then slap them onto mastodon. install requests, feedparser, mastodon.py, and beautifulsoup4 to make it all work. will require you make a virtual pyton env in order to for it run. when you've done all that, slap it into a cronjob and make sure you tell it to use that environment!
+# welcome to my personal hell, wherein you will import image posts from reddit rss feeds, and then slap them onto mastodon. install requests, feedparser, mastodon.py, and beautifulsoup4 to make it all work. will require you make a virtual python env in order to for it run. when you've done all that, slap it into a cronjob and make sure you tell it to use that environment!
 
 import os
 import requests
@@ -7,20 +7,22 @@ from mastodon import Mastodon
 import random
 import tempfile
 import praw
+import time
+from PIL import Image 
 
 # list of common image file extensions
 image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
 
 # mastodon credentials
-INSTANCE_URL = 'your_instance_url'
-CLIENT_ID = 'your_client_id'
-CLIENT_SECRET = 'your_client_secret'
-ACCESS_TOKEN = 'your_access_token'
+INSTANCE_URL = 'insert_instance_url_here'
+CLIENT_ID = 'mastodon_client_id'
+CLIENT_SECRET = 'mastodon_secret_key'
+ACCESS_TOKEN = 'your_mastodon_access_token'
 
-# Reddit API credentials
-REDDIT_CLIENT_ID = 'your_client_id'
-REDDIT_CLIENT_SECRET = 'your_client_secret'
-REDDIT_USER_AGENT = 'your_client_name'
+# reddit API credentials
+REDDIT_CLIENT_ID = 'the_reddit_client_id'
+REDDIT_CLIENT_SECRET = 'the_reddit_secret_key'
+REDDIT_USER_AGENT = 'your_reddit_app_name'
 
 # list your subreddits here, so that bot knows what to pick from
 SUBREDDITS = [
@@ -54,15 +56,15 @@ def get_random_photo_from_subreddit(reddit, subreddit_name):
     image_submissions = [submission for submission in submissions if get_high_res_image_url(submission)]
 
     if not image_submissions:
-        print("No image posts found in subreddit. Retrying...") # if it can't ever find any image posts, this will keep going. be sure to include subs WITH images
+        print("No image posts found in subreddit. Retrying...")
         return get_random_photo_from_subreddit(reddit, subreddit_name)  # retry
     else:
         random_submission = random.choice(image_submissions)
         high_res_photo_url = get_high_res_image_url(random_submission)
         post_url = random_submission.url  # extract the post URL
-        return high_res_photo_url, post_url
+        return high_res_photo_url, post_url, random_submission
 
-def post_photo(mastodon_client, photo_url, post_url):
+def post_photo(mastodon_client, photo_url, post_url, submission):
     # download the image
     response = requests.get(photo_url)
     response.raise_for_status()  # ensure the request was successful
@@ -73,53 +75,63 @@ def post_photo(mastodon_client, photo_url, post_url):
         tmp_file_path = tmp_file.name
 
     try:
+        # verify image integrity
+        img = Image.open(tmp_file_path)
+        img.verify()
+
         # post the image
         media = mastodon_client.media_post(media_file=tmp_file_path)
-        mastodon_client.status_post(
-            status='Put your own status text here! Original post: ' + post_url,
-            media_ids=media,
-            sensitive=True  # mark the post as sensitive, because that's the cool thing to do
+
+        # wait for media to finish processing
+        while 'processing' in media and media['processing']:
+            time.sleep(1)
+            media = mastodon_client.media(media['id'])
+
+        status_message = (
+            f"░ Title: {submission.title}\n"
+            f'░ Original post: {post_url}\n'
+            f'░ Posted by: @{submission.author.name}@reddit.com\n'
+            f'░ Your own text for whatever you want to write along with the above information can go here!'
         )
+        mastodon_client.status_post(
+            status=status_message,
+            media_ids=[media['id']],
+            sensitive=True,  # mark the post as sensitive
+            spoiler_text="This is for the CW, can remove this completely if you don't want one"  # add spoiler text just in case
+        )
+
+    except Exception as e:
+        print(f"Error verifying image: {e}")
+        return
+
     finally:
         # delete the temporary file so that your hdd doesn't explode with anime girls and backrooms photos
         os.remove(tmp_file_path)
 
-# follow users back function
+def resize_image(image, max_size):
+    # resize the image to fit within the max_size limit while maintaining aspect ratio (mastodon likes it when you do this)
+    width, height = image.size
+    aspect_ratio = width / height
+    new_width = int((max_size / (aspect_ratio * 3)) ** 0.5)
+    new_height = int(new_width / aspect_ratio)
+    return image.resize((new_width, new_height), Image.ANTIALIAS)
 
-def follow_back(mastodon_client):
-    followers = mastodon_client.account_followers(mastodon_client.me().id)
-    follower_ids = [follower.id for follower in followers]
-    relationships = mastodon_client.account_relationships(follower_ids)
-    for follower, relationship in zip(followers, relationships):
-        if not relationship.following:
-            mastodon_client.account_follow(follower.id)
-            print(f"Followed back: {follower.username}")
-
-def main():
-    mastodon_client = mastodon.Mastodon(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
+if __name__ == "__main__":
+    # initialize Mastodon
+    mastodon_client = Mastodon(
         access_token=ACCESS_TOKEN,
         api_base_url=INSTANCE_URL
     )
 
+    # initialize Reddit
     reddit = praw.Reddit(
         client_id=REDDIT_CLIENT_ID,
         client_secret=REDDIT_CLIENT_SECRET,
         user_agent=REDDIT_USER_AGENT
     )
 
-    # follow back new followers
-    follow_back(mastodon_client)
-
     subreddit_name = get_random_subreddit()
-    photo_url, post_url = get_random_photo_from_subreddit(reddit, subreddit_name)
-    if photo_url is None:
-        print("Failed to get a valid photo URL. Exiting.")
-        return
-    post_photo(mastodon_client, photo_url, post_url)
+    photo_url, post_url, submission = get_random_photo_from_subreddit(reddit, subreddit_name)
+    post_photo(mastodon_client, photo_url, post_url, submission)
 
-if __name__ == '__main__':
-    main()
-
-# that's the end of the story, thanks for stopping by and have a great day!
+    # that's the end of the story, thanks for coming by!
